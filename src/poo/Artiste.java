@@ -45,9 +45,8 @@ public class Artiste implements Searchable<Artiste>{
 		id = i;
 	}
 	
-	// Mise en forme de l'affichage un artiste
 	public String toString(){
-		return "Données sur l'artiste :\nNom : " + nom + "\nProfession : " + type + ".";
+		return "Nom : " + nom;
 	}
 	
 	public void afficher(){
@@ -58,47 +57,31 @@ public class Artiste implements Searchable<Artiste>{
 	public ArrayList<Artiste> recherche(String s, ArrayList<Artiste> arr) {
 		ArrayList<Rech_art> result = new ArrayList<Rech_art>();
 		int i = 0, j;
-		boolean in_result = false;
 		
 		// On commence la recherche dans la liste des artistes de la BD
 		for(Artiste x: arr){
 			
-			// Si un artiste est trouvé exactement (son nom est dans la BD, casse excluse) on le met à l'indice 0, le premier,
-			// peu importe qu'il y ait déjà quelque chose dans la liste, car c'est le cas le plus proche possible.
+			// Si un artiste est trouvé exactement (son nom est dans la BD, casse excluse) on l'ajoute à la liste
+			// avec une distance de 0, définie comme la distance minimale possible.
 			if(s.equalsIgnoreCase(x.getNom())){			
 				
-				result.add(0, new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 0));
+				result.add(new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 0));
 				System.out.println("Correspondance exacte\nArtiste trouvé : " + result.get(0).a.getNom() +", " + result.get(0).a.getType() + ".");
 				i++;
 			} 
-			// Sinon, si on le nom rentré par l'utilisateur est contenu dans le nom d'un artiste de la BD, mais que ce n'est
-			// pas le nom exact, on le met au premier indice derrière la recherche exacte (0 si la condition ci-dessus n'a pas 
-			// encore été remplie, 1 sinon) car c'est mieux qu'une approximation de distance, mais pas exact quand même.
+			// Sinon, si le nom rentré par l'utilisateur est contenu dans le nom d'un artiste de la BD, mais que ce n'est
+			// pas le nom exact, on l'ajoute mais avec une distance de 1, qui est la distance minimale pour 2 chaînes non identiques.
 			else if(x.getNom().contains(s)){			
 				
 				if(result.get(0).d!=0) result.add(0, new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 1));
-				else result.add(1, new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 1));
+				else result.add(new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 1));
 				System.out.println("Correspondance approximative\nArtiste trouvé : " + result.get(i).a.getNom() +", " + result.get(i).a.getType() + ".");
 				i++;
 			} 
-			// Sinon on calcule la distance de Levenshtein, et si elle n'est pas trop grande, on insère l'artiste dans la liste.
-			// Pour l'insérer on regarde d'abord si il y a un élément ou non. Si oui, on compare la distance de l'élément actuel
-			// avec celles des éléments déjà présents (0 pour correspondance exacte, 1 pour contenu. 1 est le minimum atteignable
-			// pour deux chaines différentes) et si on arrive a un élément dont la distance est supérieure à l'élément actuel, on
-			// insère l'élément à cette place, sinon on l'insère à la fin.
+			// Sinon on calcule la distance de Levenshtein, et si elle n'est pas trop grande, on insère l'artiste dans la liste avec
+			// comme distance, la distance de Levenshtein.
 			else if(distance(x.getNom(),s)<10){
-				if(!result.isEmpty()){
-					j = 0;
-					in_result = false;
-					while(j<result.size() && in_result){
-						if(distance(x.getNom(),s) < result.get(j).d){
-							result.add(result.indexOf(result.get(j)), new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), distance(x.getNom(),s)));
-							in_result = true;
-						}
-						j++;
-					}
-				}
-				if(!in_result) result.add(i, new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), distance(x.getNom(),s)));
+				result.add(new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), distance(x.getNom(),s)));
 				i++;
 			}
 		}
