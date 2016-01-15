@@ -73,8 +73,7 @@ public class Artiste implements Searchable<Artiste>{
 			// pas le nom exact, on l'ajoute mais avec une distance de 1, qui est la distance minimale pour 2 chaînes non identiques.
 			else if(x.getNom().contains(s)){			
 				
-				if(result.get(0).d!=0) result.add(0, new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 1));
-				else result.add(new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 1));
+				result.add(0, new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 1));
 				System.out.println("Correspondance approximative\nArtiste trouvé : " + result.get(i).a.getNom() +", " + result.get(i).a.getType() + ".");
 				i++;
 			} 

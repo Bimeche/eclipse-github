@@ -73,8 +73,7 @@ public class Album implements Searchable<Album>{
 			// pas le nom exact, on l'ajoute mais avec une distance de 1, qui est la distance minimale pour 2 chaînes non identiques.
 			else if(x.getNom().contains(s)){			
 				
-				if(result.get(0).d!=0) result.add(new Rech_alb(new Album(x.getId(), x.getNom(), x.getArt(), x.getAnnee()), 1));
-				else result.add(new Rech_alb(new Album(x.getId(), x.getNom(), x.getArt(), x.getAnnee()), 1));
+				result.add(new Rech_alb(new Album(x.getId(), x.getNom(), x.getArt(), x.getAnnee()), 1));
 				System.out.println("Correspondance approximative\nAlbum trouvé : " + result.get(0).a.getNom() +", " + result.get(0).a.getArt() + ".");
 			} 
 			// Sinon on calcule la distance de Levenshtein, et si elle n'est pas trop grande, on insère l'album dans la liste avec
