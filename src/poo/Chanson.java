@@ -1,85 +1,168 @@
 package poo;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Chanson implements Searchable<Chanson>{
-	private int id;
-	private String nom;
-	private Artiste art;
-	private Genre tab[];
+public class Chanson extends Profil implements Comparable<Profil>{
+	public int id;
+	public String titre;
+	public String artiste;
+	public String album;
+	public int annee;
+	private Style style1;
+	private Style style2;
+	private Style style3;
+	private String theme;
+	private Time duree;
+	private int rythme;
+	private String paroles;
+	private String instrument;
+
+	public Chanson(int idc, String ti, String art, String alb, int a, Style st1, Style st2, Style st3, String th, Time d, int ry, String pa, String i){
+		id = idc;
+		titre = ti;
+		artiste = art;
+		album = alb;
+		annee = a;
+		style1 = st1;
+		style2 = st2;
+		style3 = st3;
+		theme = th;
+		duree = d;
+		rythme = ry;
+		paroles = pa ;
+		instrument = i;
+	}
+	public int getId(){return id;}
+	public int getAnnee(){return annee;}
+	public String getTitre(){return titre;}
+	public String getArtiste(){return artiste;}
+	public Time getDuree(){return duree;}
+	public Style getSt1(){return style1;}
+	public Style getSt2(){return style2;}
+	public Style getSt3(){return style3;}
+	public String getTheme(){return theme;}
+	public int getRythme(){return rythme;}
+	public String getParoles(){return paroles;}
+	public String getinstru(){return instrument;}
+	public String getAlbum(){return album;}
 	
-	public Chanson(){
-		id=0;
-		nom="";
-		art = null;
-		tab = new Genre[3];
+	public float comparer_instrument(Chanson c){
+		float resultat;
+		if(this.instrument.equals(c.instrument))	resultat = 1;
+		else resultat = 0;
+		
+		return resultat;
+	}
+
+	/**
+	 * Comparaison des styles entre deux chansons/ deux profils : 
+	 * Plusieurs cas : On diffÃ©rencie selon le nombre d'entrÃ©es nulles dans la BDD
+	 * @param p
+	 * @return
+	 */
+	public float comparer_styles(Profil p){
+			float result = 0;
+			if(style2==null && style3 == null && p.getSt2() == null && p.getSt3() == null){	result = (style1.comparer(p.getSt1()));		}
+			else if(style2 == null && style3 == null && p.getSt3()==null) result = Math.max(style1.comparer(p.getSt1()), style1.comparer(p.getSt2()));
+			else if(style3==null && p.getSt2()==null && p.getSt3()==null) result = Math.max(style1.comparer(p.getSt1()), style2.comparer(p.getSt1()));
+			else if(style3==null && p.getSt3()==null){
+				result = Math.max(style1.comparer(p.getSt1()), style1.comparer(p.getSt2())) * (float)0.5;
+				result +=Math.max(style2.comparer(p.getSt1()), style2.comparer(p.getSt2())) * (float)0.5;	
+			}
+			else if(style2==null && style3==null)	result = Math.max(Math.max(style1.comparer(p.getSt1()), style1.comparer(p.getSt2())), style1.comparer(p.getSt3()));
+			else if(p.getSt2()==null && p.getSt3()==null) result = Math.max(Math.max(style1.comparer(p.getSt1()), style2.comparer(p.getSt1())), style3.comparer(p.getSt1()));
+			else if(style3==null){
+				result = Math.max( Math.max(style1.comparer(p.getSt1()), style1.comparer(p.getSt2())), style1.comparer(p.getSt3()) ) * (float)0.5;
+				result += Math.max( Math.max(style2.comparer(p.getSt1()), style2.comparer(p.getSt2())), style2.comparer(p.getSt3()) ) * (float)0.5;	
+			}
+			else if(p.getSt3()==null){
+				result = Math.max( Math.max(style1.comparer(p.getSt1()), style2.comparer(p.getSt1())), style3.comparer(p.getSt1()) ) * (float)0.5;
+				result += Math.max( Math.max(style1.comparer(p.getSt2()), style2.comparer(p.getSt2())), style3.comparer(p.getSt2()) ) * (float)0.5;	
+			}
+			else {	
+				result = Math.max( Math.max(style1.comparer(p.getSt1()), style1.comparer(p.getSt2())), style1.comparer(p.getSt3()) ) * (float)(1/3);
+				result += Math.max( Math.max(style2.comparer(p.getSt1()), style2.comparer(p.getSt2())), style2.comparer(p.getSt3()) ) * (float)(1/3);	
+				result += Math.max( Math.max(style3.comparer(p.getSt1()), style3.comparer(p.getSt2())), style3.comparer(p.getSt3()) ) * (float)(1/3);	}			
+			return result;			
 	}
 	
-	public Chanson(int i, String s, Artiste a, Genre t[]){
-		id = i;
-		nom = s;
-		art = a;
-		tab = t;
+	public float comparer_theme(Profil p) {
+		float result = 0 ;
+		try{
+			if(theme.equals(p.getTheme()))	result = 1;
+		}catch(Exception e){System.out.println("Un des thÃ¨mes est null");}
+		return result;
 	}
 	
-	public int getId() {
-		return id;
+	public float comparer_duree(Profil p){
+		Duree d = new Duree(this.duree);
+		Duree d2 = new Duree(p.getDuree());
+		d = d.difference(d2);
+		float result=0;
+		if(d.getMinutes()==0&&d.getSecondes()<30)	result = 1;
+		if(d.getMinutes()==0 && d.getSecondes()>=30)	result = (float)0.75;
+		if(d.getMinutes()==1)	result = (float)0.4;
+		return result;
+ 	}
+	
+	public float comparer_annee(Profil p){
+		float result = Math.abs(this.annee-p.getAnnee());
+		result = 1-result/10;
+		if(result<=0)	result = 0;
+		return result;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public String getNom() {
-		return nom;
-	}
-	
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-	
-	public Artiste getArt() {
-		return art;
-	}
-	
-	public void setArt(Artiste a) {
-		art = a;
-	}
-	
-	public Genre[] getTab() {
-		return tab;
-	}
-	
-	public void setTab(Genre tab[]) {
-		this.tab = tab;
+	public String toString(){
+		return (titre+ " - " + artiste);
 	}
 	
 	@Override
+	public float comparer(Profil profil) {
+		if(this.equals(profil))return 1;
+		float coefficient_style = (float) 0.45;
+		float coefficient_theme = (float) 0.30;
+		float coefficient_duree = (float) 0.15;
+		float coefficient_annee = (float) 0.10;
+		System.out.println("Styles : " + comparer_styles(profil));
+		System.out.println("themes : " + comparer_theme(profil));
+		System.out.println("duree : " + comparer_duree(profil));
+		System.out.println("annee : " + comparer_annee(profil));
+		return(	coefficient_style * this.comparer_styles(profil)
+				+ coefficient_theme * this.comparer_theme(profil)
+				+ coefficient_duree * this.comparer_duree(profil)
+				+ coefficient_annee * this.comparer_annee(profil));
+	}
+	
 	public ArrayList<Chanson> recherche(String s, ArrayList<Chanson> arr) {
 		ArrayList<Rech_song> result = new ArrayList<Rech_song>();
+		int i = 0, j;
 		
-		// On commence la recherche dans la liste des albums de la BD
+		// On commence la recherche dans la liste des artistes de la BD
 		for(Chanson x: arr){
 			
-			// Si un album est trouvé exactement (son nom est dans la BD, casse excluse) on l'ajoute à la liste
+			// Si un artiste est trouvé exactement (son nom est dans la BD, casse excluse) on l'ajoute à la liste
 			// avec une distance de 0, définie comme la distance minimale possible.
-			if(s.equalsIgnoreCase(x.getNom())){			
+			if(s.equalsIgnoreCase(x.getTitre())){			
 				
-				result.add(new Rech_song(new Chanson(x.getId(), x.getNom(), x.getArt(), x.getTab()), 0));
-				System.out.println("Correspondance exacte\nAlbum trouvé : " + result.get(0).a.getNom() +", " + result.get(0).a.getArt() + ".");
+				result.add(new Rech_song(new Chanson(x.getId(), x.getTitre(), x.getArtiste(), x.getAlbum(), x.getAnnee(), x.getSt1(), x.getSt2(), x.getSt3(), x.getTheme(), x.getDuree(), x.getRythme(), x.getParoles(), x.getinstru()), 0));
+				System.out.println("Correspondance exacte\nChanson trouvée : " + result.get(0).a.getTitre() +", " + result.get(0).a.getArtiste() + ".");
+				i++;
 			} 
-			// Sinon, si on le nom rentré par l'utilisateur est contenu dans le nom d'un album de la BD, mais que ce n'est
+			// Sinon, si le nom rentré par l'utilisateur est contenu dans le nom d'un artiste de la BD, mais que ce n'est
 			// pas le nom exact, on l'ajoute mais avec une distance de 1, qui est la distance minimale pour 2 chaînes non identiques.
-			else if(x.getNom().contains(s)){			
+			else if(x.getTitre().contains(s)){			
 				
-				result.add(new Rech_song(new Chanson(x.getId(), x.getNom(), x.getArt(), x.getTab()), 1));
-				System.out.println("Correspondance approximative\nAlbum trouvé : " + result.get(0).a.getNom() +", " + result.get(0).a.getArt() + ".");
+				result.add(new Rech_song(new Chanson(x.getId(), x.getTitre(), x.getArtiste(), x.getAlbum(), x.getAnnee(), x.getSt1(), x.getSt2(), x.getSt3(), x.getTheme(), x.getDuree(), x.getRythme(), x.getParoles(), x.getinstru()), 1));
+				System.out.println("Correspondance approximative\nChanson trouvée : " + result.get(i).a.getTitre() +", " + result.get(i).a.getArtiste() + ".");
+				i++;
 			} 
-			// Sinon on calcule la distance de Levenshtein, et si elle n'est pas trop grande, on insère l'album dans la liste avec
+			// Sinon on calcule la distance de Levenshtein, et si elle n'est pas trop grande, on insère l'artiste dans la liste avec
 			// comme distance, la distance de Levenshtein.
-			else if(distance(x.getNom(),s)<10){
-				result.add(new Rech_song(new Chanson(x.getId(), x.getNom(), x.getArt(), x.getTab()), distance(x.getNom(),s)));
+			else if(distance(x.getTitre(),s)<10){
+				result.add(new Rech_song(new Chanson(x.getId(), x.getTitre(), x.getArtiste(), x.getAlbum(), x.getAnnee(), x.getSt1(), x.getSt2(), x.getSt3(), x.getTheme(), x.getDuree(), x.getRythme(), x.getParoles(), x.getinstru()), distance(x.getTitre(),s)));
+				i++;
 			}
 		}
 		

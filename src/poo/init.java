@@ -13,7 +13,7 @@ public class init {
 	 * Fonction qui permet de récupérer les genres de la BDD et de créer une ArrayList contenant les genres définis dans la BDD.
 	 * @return La liste des genres
 	 */
-	public static ArrayList<Genre> recuperer_genres(){
+	public static ArrayList<Genre> recuperer_arbre(){
 		ArrayList<Genre> liste = new ArrayList<Genre>();
 		//Information d'accès à la base de données
 		String url = "jdbc:mysql://localhost/Projet_Poo";
@@ -22,17 +22,11 @@ public class init {
 		Connection cn = null;
 		Statement st = null;
 		ResultSet rs = null;
-		try{
-			//Etape 1 : Chargement du driver
-			Class.forName("com.mysql.jdbc.Driver");
-			//Etape 2 : récupération de la connexion
+		try{Class.forName("com.mysql.jdbc.Driver");
 			cn = (Connection) DriverManager.getConnection(url, login, passwd);
-			//Etape 3 : Création d'un statement
 			st = (Statement) cn.createStatement();
 			String sql = "SELECT * FROM Genre";
-			//Etape 4 : exécution requête
 			rs = st.executeQuery(sql);
-			//Etape 5 : (Parcours Resultset)
 			while(rs.next()){
 				/* Affiche les données récupérées dans la BDD
 				System.out.println(rs.getString("idG") + " " + rs.getString("nomG"));
@@ -44,15 +38,61 @@ public class init {
 		}catch(ClassNotFoundException e){
 			e.printStackTrace();
 		}finally {
-			try{
-				// Etape 5 : libérer les ressources de la mémoire
-				cn.close();
-				st.close();
+			try{cn.close();	st.close();				
+
 			}catch(SQLException e){
 				e.printStackTrace();
 			}
 		}
-
+		
+		// ON RECUPERE LES STYLES
+		try{Class.forName("com.mysql.jdbc.Driver");
+			cn = (Connection) DriverManager.getConnection(url, login, passwd);
+			st = (Statement) cn.createStatement();
+			String sql = "SELECT * FROM Style";
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				/*
+				 * Récupère les sous-styles des Genres et les place dans les arrayList de chaque Genre
+				 * En fonction de l'idPere contenu dans la BDD dans la Table des Styles
+				 */
+				liste.get(rs.getInt("idPere")-1).fils.add(new Style(rs.getString("nomS"), rs.getInt("ordre"), (liste.get(rs.getInt("idPere")-1))));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}finally {
+			try{cn.close();	st.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+		//ON RECUPERE LES SOUS_STYLES 
+		// ON RECUPERE LES STYLES
+		try{Class.forName("com.mysql.jdbc.Driver");
+			cn = (Connection) DriverManager.getConnection(url, login, passwd);
+			st = (Statement) cn.createStatement();
+			String sql = "SELECT * FROM Sous_Style";
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				/*
+				 * Récupère les sous-styles des Genres et les place dans les arrayList de chaque Genre
+				 * En fonction de l'idPere contenu dans la BDD dans la Table des Styles
+				 */
+				liste.get((rs.getInt("idGrPereS"))-1).fils.get(rs.getInt("idPereS")-1).add_sstyle(new Style(rs.getString("nomSSS"), rs.getInt("ordreS"), (liste.get(rs.getInt("idGrPereS")-1).fils.get((rs.getInt("idPereS")-1)))));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}finally {
+			try{cn.close();	st.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
 		Genre blues = liste.get(0);
 		Genre enfant = liste.get(1);
 		Genre classique = liste.get(2);
@@ -82,10 +122,7 @@ public class init {
 		blues.set_distance(rap, 759);
 		blues.set_distance(reggae, 582);
 		// LISTE SOUS-STYLES - BLUES
-		blues.add_sstyle(new Sous_style("acoustic_blues",1,blues));
-		blues.add_sstyle(new Sous_style("electric_blues",2, blues));
-		blues.add_sstyle(new Sous_style("country_blues",3, blues));
-		
+
 		// LISTE GENRES : ID 2 - ENFANT 
 		
 		enfant.set_distance(blues, 175);
@@ -102,9 +139,9 @@ public class init {
 		enfant.set_distance(reggae, 407);
 		
 		// LISTE SOUS-STYLES - ENFANT
-		enfant.add_sstyle(new Sous_style("capoeira" ,1,enfant));
-		enfant.add_sstyle(new Sous_style("education",2,enfant));
-		enfant.add_sstyle(new Sous_style("comique",3,enfant));
+		enfant.add_sstyle(new Style("capoeira" ,1,enfant));
+		enfant.add_sstyle(new Style("education",2,enfant));
+		enfant.add_sstyle(new Style("comique",3,enfant));
 
 		// LISTE GENRES : ID 3 - CLASSIQUE
 		
@@ -120,13 +157,6 @@ public class init {
 		classique.set_distance(r_and_b, 984); 
 		classique.set_distance(rap,1212);
 		classique.set_distance(reggae,1139);
-		// LISTE SOUS-STYLES - BLUES
-		classique.add_sstyle(new Sous_style("ballet",1,classique));
-		classique.add_sstyle(new Sous_style("concerto",2,classique));
-		classique.add_sstyle(new Sous_style("symphony",3,classique));
-		classique.add_sstyle(new Sous_style("renaissance",4,classique));
-		classique.add_sstyle(new Sous_style("orchestral",5,classique));
-		classique.add_sstyle(new Sous_style("opera",6,classique));
 		
 		// LISTE GENRES : ID 4 - COUNTRY
 		
@@ -142,10 +172,6 @@ public class init {
 		country.set_distance(r_and_b, 276); 
 		country.set_distance(rap,877); 
 		country.set_distance(reggae,1063);
-		// LISTE SOUS-STYLES - COUNTRY
-		country.add_sstyle(new Sous_style("country_pop",1,country));
-		country.add_sstyle(new Sous_style("progressive_country",2,country));
-		country.add_sstyle(new Sous_style("traditional_country",3,country));
 
 		
 		// LISTE GENRES : ID 5 - ELECTRONIC
@@ -162,11 +188,6 @@ public class init {
 		electronic.set_distance(r_and_b, 578); 
 		electronic.set_distance(rap,543); 
 		electronic.set_distance(reggae,758); 
-		// LISTE SOUS-STYLES - ELECTRONIC
-		electronic.add_sstyle(new Sous_style("house",1,electronic));
-		electronic.add_sstyle(new Sous_style("techno",2,electronic));
-		electronic.add_sstyle(new Sous_style("trance",3,electronic));
-
 
 		// LISTE GENRES : ID 6 - FOLK
 		
@@ -183,8 +204,6 @@ public class init {
 		folk.set_distance(rap,1018);
 		folk.set_distance(reggae,1013);
 		// LISTE SOUS-STYLES - FOLK
-		folk.add_sstyle(new Sous_style("contemporary_folk",1,folk));
-		folk.add_sstyle(new Sous_style("traditional_folk",2,folk));
 
 		// LISTE GENRES : ID 7 - DISCO 
 
@@ -200,8 +219,6 @@ public class init {
 		disco.set_distance(r_and_b, 102); 
 		disco.set_distance(rap, 86);
 		disco.set_distance(reggae, 269);
-		// LISTE SOUS-STYLES - disco
-		disco.add_sstyle(new Sous_style("funk",1,disco));
 
 		// LISTE GENRES : ID 8 - JAZZ 
 
@@ -217,10 +234,7 @@ public class init {
 		jazz.set_distance(r_and_b, 824); 
 		jazz.set_distance(rap, 977);
 		jazz.set_distance(reggae, 822);
-		// LISTE SOUS-STYLES - JAZZ
-		jazz.add_sstyle(new Sous_style("classic_jazz",1,jazz));
-		jazz.add_sstyle(new Sous_style("swing",2,jazz));
-		jazz.add_sstyle(new Sous_style("groove",3,jazz));
+
 
 				// LISTE GENRES : ID 9 - POP-ROCK 
 
@@ -236,13 +250,7 @@ public class init {
 		pop_rock.set_distance(r_and_b, 480); 
 		pop_rock.set_distance(rap, 1047);
 		pop_rock.set_distance(reggae, 1230);
-		// LISTE SOUS-STYLES - pop_rock
-		pop_rock.add_sstyle(new Sous_style("indie_rock",1,pop_rock));
-		pop_rock.add_sstyle(new Sous_style("heavy_metal",2,pop_rock));
-		pop_rock.add_sstyle(new Sous_style("rock_and_roll",3,pop_rock));
-		pop_rock.add_sstyle(new Sous_style("country_rock",4,pop_rock));
-		pop_rock.add_sstyle(new Sous_style("hard_rock",5,pop_rock));
-		pop_rock.add_sstyle(new Sous_style("dance",6,pop_rock));
+
 
 		// LISTE GENRES : ID 10 - R&B 
 
@@ -258,9 +266,6 @@ public class init {
 		r_and_b.set_distance(r_and_b, 1); 
 		r_and_b.set_distance(rap, 296);
 		r_and_b.set_distance(reggae, 579);
-		// LISTE SOUS-STYLES - R&B
-		r_and_b.add_sstyle(new Sous_style("contemporary_r_and_b",1,r_and_b));
-		r_and_b.add_sstyle(new Sous_style("soul",2,r_and_b));
 
 		// LISTE GENRES : ID 11 - RAP 
 
@@ -276,10 +281,6 @@ public class init {
 		rap.set_distance(r_and_b, 120); 
 		rap.set_distance(rap, 1);
 		rap.set_distance(reggae, 113);
-		// LISTE SOUS-STYLES - RAP
-		rap.add_sstyle(new Sous_style("alternative_rap",1,rap));
-		rap.add_sstyle(new Sous_style("reggaeton",2,rap));
-		rap.add_sstyle(new Sous_style("hip_hop",3,rap));
 
 		// LISTE GENRES : ID 11 - REGGAE 
 
@@ -295,12 +296,6 @@ public class init {
 		reggae.set_distance(r_and_b, 160); 
 		reggae.set_distance(rap, 30);
 		reggae.set_distance(reggae, 1);
-		// LISTE SOUS-STYLES - REGGAE
-		reggae.add_sstyle(new Sous_style("dancehall",1,reggae));
-		reggae.add_sstyle(new Sous_style("ragga",2, reggae));
-		reggae.add_sstyle(new Sous_style("reggae_pop",3, reggae));
-		reggae.add_sstyle(new Sous_style("souns_system",4, reggae));
-		reggae.add_sstyle(new Sous_style("ska",5, reggae));
 	
 		liste.set(0, blues);
 		liste.set(1, enfant);
@@ -342,8 +337,8 @@ public class init {
 			rs = st.executeQuery(sql);
 			//Etape 5 : (Parcours Resultset)
 			while(rs.next()){
-				//Affiche les données récupérées dans la BDD
-				System.out.println(rs.getString("idAr") + " " + rs.getString("nomAr") + " " + rs.getString("type"));
+				/*Affiche les données récupérées dans la BDD*/
+				//System.out.println(rs.getString("idAr") + " " + rs.getString("nomAr") + " " + rs.getString("type"));
 				
 				liste.add(new Artiste(rs.getInt("idAr"), rs.getString("nomAr"), rs.getString("type"))); 
 			}
@@ -360,6 +355,101 @@ public class init {
 				e.printStackTrace();
 			}
 		}
+
 		return liste;
 	}
+
+
+
+/**
+ * Fonction qui permet de récupérer les artistes de la BDD et de créer une ArrayList contenant les artistes définis dans la BDD.
+ * @return La liste des artistes
+ */
+public static ArrayList<Chanson> recuperer_chansons(ArrayList<Genre> liste_g){
+	int i, j, k;
+	Style st1 = null;
+	Style st2 = null;
+	Style st3 = null;
+	ArrayList<Chanson> liste = new ArrayList<Chanson>();
+	//Information d'accès à la base de données
+	String url = "jdbc:mysql://localhost/Projet_Poo";
+	String login = "root";
+	String passwd = "projet";
+	Connection cn = null;
+	Statement st = null;
+	ResultSet rs = null;
+	try{
+		//Etape 1 : Chargement du driver
+		Class.forName("com.mysql.jdbc.Driver");
+		//Etape 2 : récupération de la connexion
+		cn = (Connection) DriverManager.getConnection(url, login, passwd);
+		//Etape 3 : Création d'un statement
+		st = (Statement) cn.createStatement();
+		String sql = "SELECT * FROM Chanson";
+		//Etape 4 : exécution requête
+		rs = st.executeQuery(sql);
+		//Etape 5 : (Parcours Resultset)
+		while(rs.next()){
+			/*Affiche les données récupérées dans la BDD*/
+			/*System.out.println(rs.getString("titre")+ " " + 
+					rs.getString("artiste")+ " " + 
+					rs.getString("album")+ " " + 
+					rs.getString("style1")+ " " + 
+					rs.getString("style2")+ " " + 
+					rs.getString("style3")+ " " + 
+					rs.getString("theme")+ " " + 
+					rs.getTime("duree")+ " " + 
+					rs.getInt("rythme")+ " " + 
+					rs.getString("instrument"));
+			*/
+			//On récupère les styles dans l'arraylist correspondant aux noms des styles dans la BDD
+			st1 = (Style)null;
+			st2 = (Style)null;
+			st3 = (Style)null;
+			for(i=0; i<12; i++){
+				if(liste_g.get(i).nom.equals(rs.getString("style1")))	st1 =liste_g.get(i);
+				if(liste_g.get(i).nom.equals(rs.getString("style2")))	st2 =liste_g.get(i);
+				if(liste_g.get(i).nom.equals(rs.getString("style3")))	st3 =liste_g.get(i);
+				for(j=0; j<liste_g.get(i).nb_fils(); j++){
+					if(liste_g.get(i).fils.get(j).nom.equals(rs.getString("style1")))	st1 =liste_g.get(i).fils.get(j);
+					if(liste_g.get(i).fils.get(j).nom.equals(rs.getString("style2")))	st2 =liste_g.get(i).fils.get(j);
+					if(liste_g.get(i).fils.get(j).nom.equals(rs.getString("style3")))	st3 =liste_g.get(i).fils.get(j);
+					for(k=0; k<liste_g.get(i).fils.get(j).nb_fils(); k++){
+						if(liste_g.get(i).fils.get(j).fils.get(k).nom.equals(rs.getString("style1")))	st1 =liste_g.get(i).fils.get(j).fils.get(k);
+						if(liste_g.get(i).fils.get(j).fils.get(k).nom.equals(rs.getString("style2")))	st2 =liste_g.get(i).fils.get(j).fils.get(k);
+						if(liste_g.get(i).fils.get(j).fils.get(k).nom.equals(rs.getString("style3")))	st3 =liste_g.get(i).fils.get(j).fils.get(k);
+					}
+				}
+				
+			}
+			liste.add(new Chanson(rs.getInt("idCh"), 
+					rs.getString("titre"), 
+					rs.getString("artiste"), 
+					rs.getString("album"), 
+					rs.getInt("annee"),
+					st1, st2, st3,
+					rs.getString("theme"), 
+					rs.getTime("duree"), 
+					rs.getInt("rythme"), 
+					rs.getString("paroles"), 
+					rs.getString("instrument"))); 
+		}
+	}catch(SQLException e){
+		e.printStackTrace();
+	}catch(ClassNotFoundException e){
+		e.printStackTrace();
+	}finally {
+		try{
+			// Etape 5 : libérer les ressources de la mémoire
+			cn.close();
+			st.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	return liste;
 }
+
+
+}
+

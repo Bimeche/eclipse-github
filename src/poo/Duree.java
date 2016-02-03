@@ -1,50 +1,61 @@
 package poo;
 
-/**
- * Classe Durée - Comparable
- * Représente la durée d'une chanson
- * @author oceane
- *
- */
-public class Duree implements Comparable<Duree>{
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 
-	private int min;
-	private int sec;
+public class Duree {
+	private int heures;
+	private int minutes;
+	private int secondes;
+	private Calendar cal;
+	public Duree(Time t){
+		Date date = new Date();
+		date = t;
+		cal = Calendar.getInstance();
+		cal.setTime(date);
+		heures = cal.get(Calendar.HOUR_OF_DAY);
+		minutes = cal.get(Calendar.MINUTE);
+		secondes = cal.get(Calendar.SECOND);
+	}
 	
-	public Duree(int m, int s){
-		// Je sais pas pourquoi mais dans ma tête ça va mieux comme ça, à toi de voir ce qui est le mieux
-		if(m<0)	min = 0;
-		else	min = m;
-		
-		if(s>=60){	
-			sec = s%60;
-			min += s/60;
+	public int getHeures(){return heures;}
+	public int getMinutes(){return minutes;}
+	public int getSecondes(){return secondes;}
+	
+	public Duree difference(Duree t){
+		/* Pour les secondes */
+		Duree result = this;
+		if(heures<t.heures || (heures==t.heures && minutes<t.minutes) || (heures==t.heures && minutes==t.minutes && secondes<t.secondes)){
+			return t.difference(this);
 		}
-		// else if(s<0) sec=?, min=?
-		else 	sec = s;
+		if(secondes<t.secondes){
+			if(t.minutes!=0) t.minutes++;
+			else minutes--;
+			result.secondes = 60+secondes-t.secondes;
+		}
+		else result.secondes = secondes-t.secondes;
+		
+		if(minutes<t.minutes){
+			if(t.heures!=0) t.heures++;
+			else heures--;
+			result.minutes = 60+minutes-t.minutes;
+		}
+		else result.minutes = minutes-t.minutes;
+		
+		result.heures = Math.abs((heures+ t.heures)%24);
+		return result;
+			
 	}
 	
-	public float comparer(Duree d){
-		float resultat;
-		int d_com = Math.abs(d.min - min);
-		int d_cos = Math.abs(d.sec - sec);
-		
-		//On arrondie le nombre de minutes au supérieur si le nombre de sec > 30
-		// plus tard si on peut faire une comparaison plus précise en utilisant vraiment
-		// les différences entre chaque ça pourrait être pas mal
-		if(d_cos>30)	d_com++;
-		
-		if(d_com == 0)	resultat = 1;
-		else if(d_com == 1) resultat = (float)0.6;
-		else if(d_com == 2) resultat = (float)0.3;
-		else resultat = 0;
-		
-		return resultat;
+	public String toString(){
+		String result = "";
+		if(heures<10)	result+="0"+heures+":";
+		else result+=heures+":";
+		if(minutes<10) result+="0"+minutes+":";
+		else result+=minutes+":";
+		if(secondes<10)	result+="0"+secondes;
+		else result+=secondes;
+		return(result);
 	}
-		
-	public void out(){
-		System.out.print(min + "min" + " ");
-		if(sec<10)	System.out.println("0" + sec + "sec");
-		else System.out.println(sec + "sec");
-	}
-};
+}

@@ -1,5 +1,7 @@
 package poo;
 
+import java.util.ArrayList;
+
 public interface Comparable<T> {
 	/**
 	 * Chaque classe implémentant l'interface Comparable devra 
