@@ -21,12 +21,12 @@ public class PanelAcc_Bienvenueinvite extends JPanel{
 		setLayout(new BorderLayout());
 		JPanel pBContent = new JPanel();
 		pBContent.setLayout(new BorderLayout());
-			pBContent.setPreferredSize(new Dimension(400, 300));
-			TitledBorder title;
-			Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-			title = BorderFactory.createTitledBorder(loweredetched,"Bienvenue");
-			
-			pBContent.setBorder(title);
+		pBContent.setPreferredSize(new Dimension(400, 300));
+		TitledBorder title;
+		Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+		title = BorderFactory.createTitledBorder(loweredetched,"Bienvenue");
+		
+		pBContent.setBorder(title);
 
 
 		/* Boutons du panel Bienvenue */

@@ -40,39 +40,38 @@ public class PanelComp  extends JPanel{
 		setLayout(new FlowLayout());
 		JPanel pBContent = new JPanel();
 		pBContent.setLayout(new FlowLayout());
-			pBContent.setPreferredSize(new Dimension(400, 300));
-			TitledBorder title;
-			Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-			title = BorderFactory.createTitledBorder(loweredetched,"Comparaison");
-			pBContent.setBorder(title);
-			lg = init.recuperer_arbre();
-			lc = init.recuperer_chansons(lg);
-			
-			Collections.sort(lc,new Comparator(){
-
+		pBContent.setPreferredSize(new Dimension(400, 300));
+		TitledBorder title;
+		Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+		title = BorderFactory.createTitledBorder(loweredetched,"Comparaison");
+		pBContent.setBorder(title);
+		lg = init.recuperer_arbre();
+		lc = init.recuperer_chansons(lg);
+		
+		Collections.sort(lc,new Comparator(){
 				@Override
-				public int compare(Object a1, Object a2) {
-					return ((Chanson)a1).titre.compareTo(((Chanson)a2).titre);	}
-		 	});
-			/* On crée les deux listes de selection de chansons */
-			
-			JPanel liste1 = new JPanel();
-			final JList list = new JList(lc.toArray()); 
-			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-			list.setVisibleRowCount(-1);
-			JScrollPane listScroller = new JScrollPane(list);
-			listScroller.setPreferredSize(new Dimension(350, 100));
-			liste1.add(listScroller);
-			
-			JPanel liste2 = new JPanel();
-			final JList list2 = new JList(lc.toArray()); 
-			list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			list2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-			list2.setVisibleRowCount(-1);
-			JScrollPane listScroller2 = new JScrollPane(list2);
-			listScroller2.setPreferredSize(new Dimension(350, 100));
-			liste2.add(listScroller2);
+			public int compare(Object a1, Object a2) {
+				return ((Chanson)a1).titre.compareTo(((Chanson)a2).titre);	}
+	 	});
+		/* On crée les deux listes de selection de chansons */
+		
+		JPanel liste1 = new JPanel();
+		final JList list = new JList(lc.toArray()); 
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		list.setVisibleRowCount(-1);
+		JScrollPane listScroller = new JScrollPane(list);
+		listScroller.setPreferredSize(new Dimension(350, 100));
+		liste1.add(listScroller);
+		
+		JPanel liste2 = new JPanel();
+		final JList list2 = new JList(lc.toArray()); 
+		list2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list2.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		list2.setVisibleRowCount(-1);
+		JScrollPane listScroller2 = new JScrollPane(list2);
+		listScroller2.setPreferredSize(new Dimension(350, 100));
+		liste2.add(listScroller2);
 		pBContent.add(liste1);
 		pBContent.add(liste2);
 		

@@ -16,7 +16,7 @@ public class MaFenetre extends JFrame{
 	static boolean log = false;
 	private JTabbedPane Onglets = null;
 	private JPanel container;
-	private PanelAcc jp1 = new PanelAcc();
+	static PanelAcc jp1 = new PanelAcc();
     private PanelRech jp2 = new PanelRech();
     private PanelComp jp3 = new PanelComp();
     private PanelPlay jp4 = new PanelPlay();

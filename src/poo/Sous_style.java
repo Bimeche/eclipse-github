@@ -18,11 +18,19 @@ public class Sous_style extends Genre implements Comparable<Genre>{
 	 * @param i le numéro du fils (et son rapport d proximité par rapport au Style père)
 	 */
 	
+	public Sous_style(String n, int id){
+		super(n,id);
+		nom=n;
+		this.pere = null;
+	}
+	
 	public Sous_style(String n, int id, Genre p){
 		super(n,id);
 		nom=n;
 		this.pere = p;
 	}
+	
+	public String get_nomSS(){ return nom;}
 	
 	public float comparer(Genre s){
 		float resultat;

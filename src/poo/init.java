@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 
+import reserv.Client;
+
 public class init {
 	/**
 	 * Fonction qui permet de récupérer les genres de la BDD et de créer une ArrayList contenant les genres définis dans la BDD.
@@ -312,6 +314,80 @@ public class init {
 			return liste;
 	}
 	
+	public static ArrayList<Style> recuperer_styles(){
+		ArrayList<Style> liste = new ArrayList<Style>();
+		//Information d'accès à la base de données
+		String url = "jdbc:mysql://localhost/Projet_Poo";
+		String login = "root";
+		String passwd = "projet";
+		Connection cn = null;
+		Statement st = null;
+		ResultSet rs = null;
+		
+		// ON RECUPERE LES STYLES
+		try{Class.forName("com.mysql.jdbc.Driver");
+			cn = (Connection) DriverManager.getConnection(url, login, passwd);
+			st = (Statement) cn.createStatement();
+			String sql = "SELECT * FROM Style";
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				/*
+				 * Récupère les sous-styles des Genres et les place dans les arrayList de chaque Genre
+				 * En fonction de l'idPere contenu dans la BDD dans la Table des Styles
+				 */
+				liste.add(new Style(rs.getString("nomS"), rs.getInt("idS")));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}finally {
+			try{cn.close();	st.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		return liste;
+	
+	}
+	
+	public static ArrayList<Sous_style> recuperer_sousstyles(){
+		ArrayList<Sous_style> liste = new ArrayList<Sous_style>();
+		//Information d'accès à la base de données
+		String url = "jdbc:mysql://localhost/Projet_Poo";
+		String login = "root";
+		String passwd = "projet";
+		Connection cn = null;
+		Statement st = null;
+		ResultSet rs = null;
+	
+		//ON RECUPERE LES SOUS_STYLES 
+		// ON RECUPERE LES STYLES
+		try{Class.forName("com.mysql.jdbc.Driver");
+			cn = (Connection) DriverManager.getConnection(url, login, passwd);
+			st = (Statement) cn.createStatement();
+			String sql = "SELECT * FROM Sous_Style";
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				/*
+				 * Récupère les sous-styles des Genres et les place dans les arrayList de chaque Genre
+				 * En fonction de l'idPere contenu dans la BDD dans la Table des Styles
+				 */
+				liste.add(new Sous_style(rs.getString("nomSSS"), rs.getInt("idSSS")));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}finally {
+			try{cn.close();	st.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		return liste;
+	}
+	
 	/**
 	 * Fonction qui permet de récupérer les artistes de la BDD et de créer une ArrayList contenant les artistes définis dans la BDD.
 	 * @return La liste des artistes
@@ -449,7 +525,97 @@ public static ArrayList<Chanson> recuperer_chansons(ArrayList<Genre> liste_g){
 	}
 	return liste;
 }
-
+	
+	public static ArrayList<Client> recuperer_clients(){
+		ArrayList<Client> liste = new ArrayList<Client>();
+		//Information d'accès à la base de données
+		String url = "jdbc:mysql://localhost/Projet_Poo";
+		String login = "root";
+		String passwd = "projet";
+		Connection cn = null;
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+			//Etape 1 : Chargement du driver
+			Class.forName("com.mysql.jdbc.Driver");
+			//Etape 2 : récupération de la connexion
+			cn = (Connection) DriverManager.getConnection(url, login, passwd);
+			//Etape 3 : Création d'un statement
+			st = (Statement) cn.createStatement();
+			String sql = "SELECT * FROM client";
+			//Etape 4 : exécution requête
+			rs = st.executeQuery(sql);
+			//Etape 5 : (Parcours Resultset)
+			while(rs.next()){
+				/*Affiche les données récupérées dans la BDD*/
+				//System.out.println(rs.getString("idAr") + " " + rs.getString("nomAr") + " " + rs.getString("type"));
+				
+				liste.add(new Client(rs.getInt("id"), rs.getString("nom"), rs.getString("prenom"), rs.getString("pseudo"), rs.getString("password"))); 
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}finally {
+			try{
+				// Etape 5 : libérer les ressources de la mémoire
+				cn.close();
+				st.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+	
+		return liste;
+	}
+	
+	public static ArrayList<String> recuperer_themes(){
+		ArrayList<String> liste = new ArrayList<String>();
+		//Information d'accès à la base de données
+		String url = "jdbc:mysql://localhost/Projet_Poo";
+		String login = "root";
+		String passwd = "projet";
+		Connection cn = null;
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+			//Etape 1 : Chargement du driver
+			Class.forName("com.mysql.jdbc.Driver");
+			//Etape 2 : récupération de la connexion
+			cn = (Connection) DriverManager.getConnection(url, login, passwd);
+			//Etape 3 : Création d'un statement
+			st = (Statement) cn.createStatement();
+			String sql = "SELECT theme FROM Chanson";
+			//Etape 4 : exécution requête
+			rs = st.executeQuery(sql);
+			//Etape 5 : (Parcours Resultset)
+			while(rs.next()){
+				/*Affiche les données récupérées dans la BDD*/
+				//System.out.println(rs.getString("idAr") + " " + rs.getString("nomAr") + " " + rs.getString("type"));
+				if(liste.isEmpty()) liste.add(rs.getString("theme")); 
+				else if(rs.getString("theme")!=null){
+					if(rs.getString("theme")!="NULL" && !liste.contains(rs.getString("theme"))){
+						liste.add(rs.getString("theme")); 
+					}
+				}
+					
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}finally {
+			try{
+				// Etape 5 : libérer les ressources de la mémoire
+				cn.close();
+				st.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+	
+		return liste;
+	}
 
 }
 

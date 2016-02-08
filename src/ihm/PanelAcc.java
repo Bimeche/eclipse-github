@@ -35,9 +35,9 @@ public class PanelAcc extends JPanel{
 		/* ---------------------------------- PARTIE PANNEAU BIENVENUE INVITE------------------------------ */
 		pBienvenue = new PanelAcc_Bienvenueinvite();
 		this.add(pBienvenue);		
-		/* ---------------------------------- PARTIE PANNEAU BIENVENUE INVITE------------------------------ */
-		pBienvenuelog = new PanelAcc_Bienvenuelog();
-		this.add(pBienvenuelog);	
+		/* ---------------------------------- PARTIE PANNEAU BIENVENUE------------------------------ */
+		//pBienvenuelog = new PanelAcc_Bienvenuelog();
+		//this.add(pBienvenuelog);	
 		/* ------------------ PARTIE PANNEAU INSCRIPTION ------------------ */
 		pInscription = new PanelAcc_Inscription();
 		this.add(pInscription);
