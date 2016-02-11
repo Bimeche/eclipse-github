@@ -135,6 +135,11 @@ public class Style implements Comparable<Genre>{
 		
 		if(this==null || s == null || this.nom.equals("null") || s.nom.equals("null"))	res = 10000;
 		else if(this == s )	res = 0;
+		
+		
+		// Ici ça ne marche pas parce que le type style n'est pas castable en type Genre,
+		// ça marche dans la comparaison parce que tu ne compare que des styles entre eux, moi j'envoie des genres parfois
+		
 		else if(this.est_genre()) return ((Genre)this).comparer(s);
 		if(s.est_genre())	return this.comparer((Genre)s);
 		else if(a_pour_fils(s)!=-1)	res = s.idSS;

@@ -45,7 +45,7 @@ public class MaFenetre extends JFrame{
 		 Onglets.addTab("Recherche", null , jp2);
 		 Onglets.addTab("Comparaison", null ,jp3);
 		 Onglets.addTab("Playlist", null, jp4);
-		 Onglets.addTab("DonnÃ©es", null, jp5);
+		 Onglets.addTab("Données", null, jp5);
 		 //Onglets.setEnabledAt(4, false);
 		
 		 

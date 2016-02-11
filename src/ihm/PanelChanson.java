@@ -20,8 +20,7 @@ public class PanelChanson extends JPanel{
 		this.setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(350,25));
 		infoArtiste = new JLabel(s);
-		this.add(BorderLayout.WEST, infoArtiste);		
-		
+		this.add(BorderLayout.WEST, infoArtiste);
 	}
 
 }

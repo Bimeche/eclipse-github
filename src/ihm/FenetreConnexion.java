@@ -49,14 +49,14 @@ public class FenetreConnexion extends JFrame{
 		JLabel login = new JLabel("Pseudo :");
 		JLabel passwd = new JLabel("Mot de Passe :");
 	
-	    /*Ã©lÃ©ments de connexion*/
+	    /*Eléments de connexion*/
 	    JPanel pco = new JPanel();
 	    JButton seconnecter = new JButton("Valider");
 	    JButton annuler = new JButton("Annuler");
 		pco.setPreferredSize(new Dimension(300,200));
 		pco.setLayout(new GridBagLayout());
 		
-		//DÃ©finition des contraintes du GridBagLayout
+		//Définition des contraintes du GridBagLayout
 		GridBagConstraints gc2 = new GridBagConstraints();
 		   
 		gc2.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -91,32 +91,38 @@ public class FenetreConnexion extends JFrame{
 		seconnecter.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				
-				int i=0;
-				String pass = new String(fieldmdp.getPassword());
-                String login_cl= fieldlogin.getText().trim();
-				Iterator<Client> it = cli.iterator();
-				Client c = null, tmp;
-				while(it.hasNext()){
-					tmp = it.next();
-					if(tmp.getPseudo().equals(login_cl)) c=tmp;
-				}
-				
-				HashMap<String,String> hmLoginPass = new HashMap<String,String>();
-                hmLoginPass.put(c.getPseudo(),c.getMdp());
-                if(!hmLoginPass.containsKey(login_cl)||!hmLoginPass.containsValue(pass)){
+				if(fieldmdp.getPassword().length!=0){
+					int i=0;
+					String pass = new String(fieldmdp.getPassword());
+	                String login_cl= fieldlogin.getText().trim();
+					Iterator<Client> it = cli.iterator();
+					Client c = null, tmp;
+					while(it.hasNext()){
+						tmp = it.next();
+						if(tmp.getPseudo().equals(login_cl)) c=tmp;
+					}
+					
+					HashMap<String,String> hmLoginPass = new HashMap<String,String>();
+					
+	                hmLoginPass.put(c.getPseudo(),c.getMdp());
+                
+	                if(!hmLoginPass.containsKey(login_cl)||!hmLoginPass.containsValue(pass)){
+	                	JOptionPane.showMessageDialog(pco, "Le pseudo ou le mot de passe est incorrect", "Erreur lors de la connexion", JOptionPane.ERROR_MESSAGE);
+						fieldmdp.setText("");
+	                }else if(hmLoginPass.get(login_cl).equals(pass)){
+	                    MaFenetre.log = true;
+	    				fieldlogin.setText("");
+	    				fieldmdp.setText("");
+	    				dispose();
+	    				PanelAcc.pBienvenue.setVisible(false);
+	    				PanelAcc.login = login_cl;
+	    				PanelAcc.pBienvenuelog = new PanelAcc_Bienvenuelog();
+	    				MaFenetre.jp1.add(PanelAcc.pBienvenuelog);
+	    				PanelAcc.pBienvenuelog.setVisible(true);
+	                }
+                }else{
                 	JOptionPane.showMessageDialog(pco, "Le pseudo ou le mot de passe est incorrect", "Erreur lors de la connexion", JOptionPane.ERROR_MESSAGE);
 					fieldmdp.setText("");
-                }else if(hmLoginPass.get(login_cl).equals(pass)){
-                    MaFenetre.log = true;
-    				fieldlogin.setText("");
-    				fieldmdp.setText("");
-    				dispose();
-    				PanelAcc.pBienvenue.setVisible(false);
-    				PanelAcc.login = login_cl;
-    				PanelAcc.pBienvenuelog = new PanelAcc_Bienvenuelog();
-    				MaFenetre.jp1.add(PanelAcc.pBienvenuelog);
-    				PanelAcc.pBienvenuelog.setVisible(true);
                 }
 			}
 		});

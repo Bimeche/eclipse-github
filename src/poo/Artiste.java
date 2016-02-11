@@ -54,53 +54,53 @@ public class Artiste implements Searchable<Artiste>{
 	}
 	
 	@Override
-	public ArrayList<Artiste> recherche(String s, ArrayList<Artiste> arr) {
-		ArrayList<Rech_art> result = new ArrayList<Rech_art>();
-		int i = 0, j;
-		
-		// On commence la recherche dans la liste des artistes de la BD
-		for(Artiste x: arr){
-			
-			// Si un artiste est trouvé exactement (son nom est dans la BD, casse excluse) on l'ajoute à la liste
-			// avec une distance de 0, définie comme la distance minimale possible.
-			if(s.equalsIgnoreCase(x.getNom())){			
-				
-				result.add(new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 0));
-				System.out.println("Correspondance exacte\nArtiste trouvé : " + result.get(0).a.getNom() +", " + result.get(0).a.getType() + ".");
-				i++;
-			} 
-			// Sinon, si le nom rentré par l'utilisateur est contenu dans le nom d'un artiste de la BD, mais que ce n'est
-			// pas le nom exact, on l'ajoute mais avec une distance de 1, qui est la distance minimale pour 2 chaînes non identiques.
-			else if(x.getNom().contains(s)){			
-				
-				result.add(0, new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 1));
-				System.out.println("Correspondance approximative\nArtiste trouvé : " + result.get(i).a.getNom() +", " + result.get(i).a.getType() + ".");
-				i++;
-			} 
-			// Sinon on calcule la distance de Levenshtein, et si elle n'est pas trop grande, on insère l'artiste dans la liste avec
-			// comme distance, la distance de Levenshtein.
-			else if(distance(x.getNom(),s)<10){
-				result.add(new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), distance(x.getNom(),s)));
-				i++;
-			}
-		}
-		
-		result.sort(new Comparator<Rech_art>(){
-						public int compare(Rech_art r1, Rech_art r2) {
-							if(r1.d<r2.d) return -1;
-							else if(r1.d>r2.d) return 1;
-							return 0;
-							}});
-
-		
-		ArrayList<Artiste> res = new ArrayList<Artiste>();
-		for(Rech_art e: result){
-			res.add(e.a);
-		}
-		
-		if(res.isEmpty()) System.out.println("Aucune coorespondance pour \"" + s + "\" dans la base de données.");
-		return res;
-	}
+//	public ArrayList<Artiste> recherche(String s, ArrayList<Artiste> arr) {
+//		ArrayList<Rech_art> result = new ArrayList<Rech_art>();
+//		int i = 0, j;
+//		
+//		// On commence la recherche dans la liste des artistes de la BD
+//		for(Artiste x: arr){
+//			
+//			// Si un artiste est trouvé exactement (son nom est dans la BD, casse excluse) on l'ajoute à la liste
+//			// avec une distance de 0, définie comme la distance minimale possible.
+//			if(s.equalsIgnoreCase(x.getNom())){			
+//				
+//				result.add(new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 0));
+//				System.out.println("Correspondance exacte\nArtiste trouvé : " + result.get(0).a.getNom() +", " + result.get(0).a.getType() + ".");
+//				i++;
+//			} 
+//			// Sinon, si le nom rentré par l'utilisateur est contenu dans le nom d'un artiste de la BD, mais que ce n'est
+//			// pas le nom exact, on l'ajoute mais avec une distance de 1, qui est la distance minimale pour 2 chaînes non identiques.
+//			else if(x.getNom().contains(s)){			
+//				
+//				result.add(0, new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), 1));
+//				System.out.println("Correspondance approximative\nArtiste trouvé : " + result.get(i).a.getNom() +", " + result.get(i).a.getType() + ".");
+//				i++;
+//			} 
+//			// Sinon on calcule la distance de Levenshtein, et si elle n'est pas trop grande, on insère l'artiste dans la liste avec
+//			// comme distance, la distance de Levenshtein.
+//			else if(distance(x.getNom(),s)<10){
+//				result.add(new Rech_art(new Artiste(x.getId(), x.getNom(), x.getType()), distance(x.getNom(),s)));
+//				i++;
+//			}
+//		}
+//		
+//		result.sort(new Comparator<Rech_art>(){
+//						public int compare(Rech_art r1, Rech_art r2) {
+//							if(r1.d<r2.d) return -1;
+//							else if(r1.d>r2.d) return 1;
+//							return 0;
+//							}});
+//
+//		
+//		ArrayList<Artiste> res = new ArrayList<Artiste>();
+//		for(Rech_art e: result){
+//			res.add(e.a);
+//		}
+//		
+//		if(res.isEmpty()) System.out.println("Aucune coorespondance pour \"" + s + "\" dans la base de données.");
+//		return res;
+//	}
 	
 	
 	public int min(int x, int y, int z){
@@ -140,7 +140,10 @@ public class Artiste implements Searchable<Artiste>{
 		
 		return d[a.length()][b.length()];
 	}
-	
-	
-	
+
+	@Override
+	public ArrayList<Artiste> recherche(Profil p, ArrayList<Artiste> arr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -43,7 +43,7 @@ public class Duree {
 		}
 		else result.minutes = minutes-t.minutes;
 		
-		result.heures = Math.abs((heures+ t.heures)%24);
+		result.heures = Math.abs((heures- t.heures)%24);
 		return result;
 			
 	}
