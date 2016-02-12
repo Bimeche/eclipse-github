@@ -137,8 +137,8 @@ public class Style implements Comparable<Genre>{
 		else if(this == s )	res = 0;
 		
 		
-		// Ici ça ne marche pas parce que le type style n'est pas castable en type Genre,
-		// ça marche dans la comparaison parce que tu ne compare que des styles entre eux, moi j'envoie des genres parfois
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		else if(this.est_genre()) return ((Genre)this).comparer(s);
 		if(s.est_genre())	return this.comparer((Genre)s);

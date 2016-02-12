@@ -69,7 +69,9 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 	public float comparer_styles(Profil p){
 		float result = 0;
 		int n = 0;
-		if(titre.equals(p.getTitre()))	return 1; // Permet d'éviter de trop longs calculs si les chansons sont les mêmes
+		if(titre.equals(p.getTitre()) && artiste.equals(p.getArtiste()) && album.equals(p.getAlbum())){
+			return 1; // Permet d'éviter de trop longs calculs si les chansons sont les mêmes
+		}
 		
 			if(style2==null && style3 == null && p.getSt2() == null && p.getSt3() == null)	n = 1; 
 			else if(style2 == null && style3 == null && p.getSt3()==null)					n = 2;
@@ -128,7 +130,7 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 		
 		int secondesdifferences = d.getSecondes()+d.getMinutes()*60+d.getHeures()*3600;
 			for(int i = 0; i<secondesdifferences; i++)	result-=0.005;
-		System.out.println(d.getSecondes()+" "+d.getMinutes());
+		//System.out.println(d.getSecondes()+" "+d.getMinutes());
 		if(result<=0) result = 0;
 		return result;
  	}

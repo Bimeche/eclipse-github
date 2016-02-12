@@ -156,15 +156,13 @@ public class PanelRech extends JPanel{
 		
 		recherche_song.add(rech_l);
 		recherche_song.add(rech_d);
+
 		
-//		rech_l.setLayout(new BorderLayout());
-//		rech_d.setLayout(new BorderLayout());
-		
-		JPanel recherche_art = new JPanel();
-		recherche_art.setLayout(new GridLayout(3,1,-65,60));
-		recherche_art.setPreferredSize(new Dimension(350, 250));
-		recherche_art.setVisible(false);
-		
+//		JPanel recherche_art = new JPanel();
+//		recherche_art.setLayout(new GridLayout(3,1,-65,60));
+//		recherche_art.setPreferredSize(new Dimension(350, 250));
+//		recherche_art.setVisible(false);
+//		
 //		JPanel rech_left = new JPanel();
 //		JPanel rech_right = new JPanel();
 //		rech_left.setLayout(new GridLayout(4,2,-70,30));
@@ -172,24 +170,19 @@ public class PanelRech extends JPanel{
 //		rech_right.setLayout(new GridLayout(3,2,-65,60));
 //		rech_right.setPreferredSize(new Dimension(175, 200));
 //		
-		JTextField fieldchanson = new JTextField(8);
-		JLabel chanson = new JLabel("Chanson ");
-		JTextField fieldartiste = new JTextField(8);
-		JLabel artiste = new JLabel("Artiste ");
-		JTextField fieldalbum = new JTextField(8);
-		JLabel album = new JLabel("Album ");
-		
-		recherche_art.add(artiste);
-		recherche_art.add(fieldartiste);
-		recherche_art.add(chanson);
-		recherche_art.add(fieldchanson);
-		recherche_art.add(album);
-		recherche_art.add(fieldalbum);
-		
-//		rech_right.add(style);
-//		rech_right.add(fieldstyle);
-//		rech_right.add(theme);
-//		rech_right.add(fieldtheme);
+//		JTextField fieldchanson = new JTextField(8);
+//		JLabel chanson = new JLabel("Chanson ");
+//		JTextField fieldartiste = new JTextField(8);
+//		JLabel artiste = new JLabel("Artiste ");
+//		JTextField fieldalbum = new JTextField(8);
+//		JLabel album = new JLabel("Album ");
+//		
+//		recherche_art.add(artiste);
+//		recherche_art.add(fieldartiste);
+//		recherche_art.add(chanson);
+//		recherche_art.add(fieldchanson);
+//		recherche_art.add(album);
+//		recherche_art.add(fieldalbum);
 		
 		JPanel valid = new JPanel();
 		valid.setPreferredSize(new Dimension(350, 50));
@@ -276,10 +269,11 @@ public class PanelRech extends JPanel{
 				else if(fieldmin.getText().isEmpty()&&!fieldsec.getText().isEmpty()) ti = new Time((Integer.parseInt(fieldmin.getText()))*1000);
 				else ti = new Time(((Integer.parseInt(fieldmin.getText())*60)+Integer.parseInt(fieldmin.getText()))*1000);
 				
-				
-				// Problème de passage de paramètres ici mais ça je vais voir moi même
-				
-				Profil p = new Profil(nb_recherche, an, fieldtitle.getText(), style_rech, null, null, (String)fieldtheme.getSelectedItem(), ti, 0, null, null, (String)fieldalbum.getText(), (String)fieldartiste.getText());
+				System.out.println(fieldart.getText());
+				System.out.println(fieldtitle.getText());
+				System.out.println(fieldalb.getText());
+				System.out.println(an);
+				Profil p = new Profil(nb_recherche, an, fieldtitle.getText(), style_rech, null, null, (String)fieldtheme.getSelectedItem(), ti, 0, null, null, fieldalb.getText(), fieldart.getText());
 				Chanson res = new Chanson();
 				result_songs = res.recherche(p, init.recuperer_chansons(styles1));
 				if(result_songs!=null){
@@ -293,7 +287,6 @@ public class PanelRech extends JPanel{
 		});
 		
 		pBContent.add(recherche_song, BorderLayout.CENTER);
-		pBContent.add(recherche_art, BorderLayout.CENTER);
 		pBContent.add(valid, BorderLayout.SOUTH);
 		
 		this.add(BorderLayout.CENTER,pBContent);
