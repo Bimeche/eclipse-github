@@ -300,14 +300,9 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 		ArrayList<Rech_song> result = new ArrayList<Rech_song>();
 		ArrayList<Rech_song> tmp = new ArrayList<Rech_song>();
 		
-		System.out.println(p.getTitre());
-		System.out.println(p.getArtiste());
-		System.out.println(p.getAlbum());
-		System.out.println(p.getAnnee());
-		
-		
 		// recherche selon le titre
 		if(!p.getTitre().isEmpty()){
+			System.out.println("titre non vide");
 			for(Chanson c : arr){
 				result.add(new Rech_song(c, (int)(100*c.comparer_titre(p))));
 			}
@@ -315,6 +310,7 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 		
 		// recherche selon l'artiste
 		if(!p.getArtiste().isEmpty()){
+			System.out.println("artiste non vide");
 			for(Chanson c : arr){
 				tmp.add(new Rech_song(c, (int)(100*c.comparer_artiste(p))));
 			}
@@ -327,10 +323,15 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 					if(c.a.equals(d.a)) d.d = d.d+c.d;
 				}
 			}
+		} else {
+			for(Rech_song c : tmp){
+				result.add(c);
+			}
 		}
 		
 		// recherche selon l'album
 		if(!p.getAlbum().isEmpty()){
+			System.out.println("album non vide");
 			for(Chanson c : arr){
 				tmp.add(new Rech_song(c, (int)(100*c.comparer_album(p))));
 			}
@@ -342,10 +343,15 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 					if(c.a.equals(d.a)) d.d = d.d+c.d;
 				}
 			}
+		} else {
+			for(Rech_song c : tmp){
+				result.add(c);
+			}
 		}
 		
 		// recherche selon l'annee
 		if(p.getAnnee()!=0){
+			System.out.println("annee non vide");
 			for(Chanson c : arr){
 				tmp.add(new Rech_song(c, (int)(100*c.comparer_annee(p))));
 			}
@@ -357,10 +363,15 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 					if(c.a.equals(d.a)) d.d = d.d+c.d;
 				}
 			}
+		} else {
+			for(Rech_song c : tmp){
+				result.add(c);
+			}
 		}
 				
 		// recherche selon la duree
 		for(Chanson c : arr){
+			System.out.println("duree non vide");
 			tmp.add(new Rech_song(c, (int)(100*c.comparer_duree(p))));
 		}
 		
@@ -371,10 +382,15 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 					if(c.a.equals(d.a)) d.d = d.d+c.d;
 				}
 			}
+		} else {
+			for(Rech_song c : tmp){
+				result.add(c);
+			}
 		}
 		
 		// recherche selon le style
 		if(p.getSt1()!=null){
+			System.out.println("Genre ? " + p.getSt1().est_genre());
 			for(Chanson c : arr){
 				tmp.add(new Rech_song(c, (int)(100*c.comparer_styles(p))));
 			}
@@ -386,10 +402,15 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 					if(c.a.equals(d.a)) d.d = d.d+c.d;
 				}
 			}
+		} else {
+			for(Rech_song c : tmp){
+				result.add(c);
+			}
 		}
 		
 		// recherche selon le theme
 		if(p.getTheme()!=null){
+			System.out.println("theme non vide");
 			for(Chanson c : arr){
 				tmp.add(new Rech_song(c, (int)(100*c.comparer_theme(p))));
 			}
@@ -400,6 +421,10 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 				for(Rech_song d : result){
 					if(c.a.equals(d.a)) d.d = d.d+c.d;
 				}
+			}
+		} else {
+			for(Rech_song c : tmp){
+				result.add(c);
 			}
 		}
 		

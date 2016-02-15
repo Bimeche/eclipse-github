@@ -33,7 +33,6 @@ import poo.Artiste;
 import poo.Chanson;
 import poo.Genre;
 import poo.Profil;
-import poo.Sous_style;
 import poo.Style;
 import poo.init;
 
@@ -45,6 +44,20 @@ public class PanelRech extends JPanel{
 	static int date;
 	static int nb_recherche = 0;
 	private ArrayList<Chanson> result_songs = null;
+	private ArrayList<Genre> styles1 = new ArrayList<Genre>();
+	private ArrayList<Style> styles = new ArrayList<Style>();
+	private JTextField fieldtitle;
+	private JLabel titre;
+	private JTextField fieldart;
+	private JLabel art;
+	private JComboBox fieldstyle;
+	private JLabel style;
+	private JComboBox fieldtheme;
+	private JLabel theme;
+	private JTextField fieldalb;
+	private JLabel alb;
+	private JComboBox fieldannee;
+	private JLabel annee;
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PanelRech(){
 		new JPanel();
@@ -68,18 +81,18 @@ public class PanelRech extends JPanel{
 		rech_d.setLayout(new GridLayout(3,2,-65,60));
 		rech_d.setPreferredSize(new Dimension(175, 200));
 		
-		JTextField fieldtitle = new JTextField(8);
-		JLabel titre = new JLabel("Titre ");
-		JTextField fieldart = new JTextField(8);
-		JLabel art = new JLabel("Artiste ");
-		JComboBox fieldstyle = new JComboBox();
-		JLabel style = new JLabel("Style ");
-		JComboBox fieldtheme = new JComboBox();
-		JLabel theme = new JLabel("Theme ");
-		JTextField fieldalb = new JTextField(8);
-		JLabel alb = new JLabel("Album ");
-		JComboBox fieldannee = new JComboBox();
-		JLabel annee = new JLabel("Annee ");
+		fieldtitle = new JTextField(8);
+		titre = new JLabel("Titre ");
+		fieldart = new JTextField(8);
+		art = new JLabel("Artiste ");
+		fieldstyle = new JComboBox();
+		style = new JLabel("Style ");
+		fieldtheme = new JComboBox();
+		theme = new JLabel("Theme ");
+		fieldalb = new JTextField(8);
+		alb = new JLabel("Album ");
+		fieldannee = new JComboBox();
+		annee = new JLabel("Annee ");
 		
 		JPanel pan_duree = new JPanel();
 		
@@ -107,16 +120,34 @@ public class PanelRech extends JPanel{
 		JLabel sec = new JLabel("s");
 		JLabel duree = new JLabel("Duree ");
 		
-		ArrayList<Genre> styles1 = init.recuperer_arbre();
-		ArrayList<Style> styles = init.recuperer_styles();
-		
-		styles.addAll(styles1);
+		styles1 = init.recuperer_arbre();
 
 		ArrayList<String> themes = init.recuperer_themes();
+		
+		if(styles1!=null){
+			styles.addAll(styles1);
+			for(Genre g : styles1){
+				styles.addAll(g.fils);
+				for(Style s : g.fils){
+					styles.addAll(s.fils);
+				}
+			}
+		}
+		
+		
+		Collections.sort(styles, new Comparator<Style>(){
+			public int compare(Style r1, Style r2) {
+				if(r1.get_nomS().compareToIgnoreCase(r2.get_nomS())>0) return 1;
+				else if(r1.get_nomS().compareToIgnoreCase(r2.get_nomS())<0) return -1;
+				return 0;
+				}
+			}
+		);
 		
 		for(Style s : styles){
 			fieldstyle.addItem(s.get_nomS());
 		}
+		
 		for(String t : themes){
 			fieldtheme.addItem(t);
 		}
@@ -252,11 +283,19 @@ public class PanelRech extends JPanel{
 				chansons.removeAll();
 				nb_recherche++;
 				Style style_rech = null;
-				for(Style st : styles){
-					if(fieldstyle.getSelectedItem()!=null){
-						if(fieldstyle.getSelectedItem().equals(st.get_nomS())) style_rech = st;
+				
+				if(fieldstyle.getSelectedItem()!=null){
+					for(Genre g : styles1){
+						if(fieldstyle.getSelectedItem().equals(g.get_nomG())) style_rech = new Genre(g.get_nomG(), g.getId());
+						for(Style s : g.fils){
+							if(fieldstyle.getSelectedItem().equals(s.get_nomS())) style_rech = new Style(s.get_nomS(), s.getId(), s.getPere());
+							for(Style ss : s.fils ){
+								if(fieldstyle.getSelectedItem().equals(ss.get_nomS())) style_rech = new Style(ss.get_nomS(), ss.getId(), ss.getPere());
+							}
+						}
 					}
 				}
+				
 				int an;
 				if(fieldannee.getSelectedItem()!=null){
 					an = (int)fieldannee.getSelectedItem();

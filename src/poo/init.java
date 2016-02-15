@@ -351,8 +351,8 @@ public class init {
 	
 	}
 	
-	public static ArrayList<Sous_style> recuperer_sousstyles(){
-		ArrayList<Sous_style> liste = new ArrayList<Sous_style>();
+	public static ArrayList<Style> recuperer_sousstyles(){
+		ArrayList<Style> liste = new ArrayList<Style>();
 		//Information d'accès à la base de données
 		String url = "jdbc:mysql://localhost/Projet_Poo";
 		String login = "root";
@@ -373,7 +373,7 @@ public class init {
 				 * Récupère les sous-styles des Genres et les place dans les arrayList de chaque Genre
 				 * En fonction de l'idPere contenu dans la BDD dans la Table des Styles
 				 */
-				liste.add(new Sous_style(rs.getString("nomSSS"), rs.getInt("idSSS")));
+				liste.add(new Style(rs.getString("nomSSS"), rs.getInt("idSSS")));
 			}
 		}catch(SQLException e){
 			e.printStackTrace();

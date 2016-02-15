@@ -57,6 +57,12 @@ public class Style implements Comparable<Genre>{
 	public String get_nomS(){
 		return nom;
 	}
+	public int getId(){
+		return idSS;
+	}
+	public Style getPere(){
+		return pere;
+	}
 	public boolean est_genre(){
 		return (pere == null);
 	}
@@ -160,6 +166,10 @@ public class Style implements Comparable<Genre>{
 		res = 1-res/20;
 		if(res<=0)	res = 0;
 		return res;
+	}
+	
+	public void parcours(){
+		
 	}
 	
 }
