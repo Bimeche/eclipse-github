@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -280,48 +281,57 @@ public class PanelRech extends JPanel{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				chansons.removeAll();
-				nb_recherche++;
-				Style style_rech = null;
-				
-				if(fieldstyle.getSelectedItem()!=null){
-					for(Genre g : styles1){
-						if(fieldstyle.getSelectedItem().equals(g.get_nomG())) style_rech = new Genre(g.get_nomG(), g.getId());
-						for(Style s : g.fils){
-							if(fieldstyle.getSelectedItem().equals(s.get_nomS())) style_rech = new Style(s.get_nomS(), s.getId(), s.getPere());
-							for(Style ss : s.fils ){
-								if(fieldstyle.getSelectedItem().equals(ss.get_nomS())) style_rech = new Style(ss.get_nomS(), ss.getId(), ss.getPere());
+				System.out.println("art : " +fieldart.getText().isEmpty());
+				System.out.println("titre : " +fieldtitle.getText().isEmpty());
+				System.out.println("album : " +fieldalb.getText().isEmpty());
+				System.out.println("min : " +fieldmin.getText().isEmpty());
+				System.out.println("sec : " +fieldsec.getText().isEmpty());
+				System.out.println("style : " +fieldstyle.getSelectedIndex());
+				System.out.println("annee : " +fieldannee.getSelectedIndex());
+				System.out.println("theme : " +fieldtheme.getSelectedIndex());
+				if(fieldart.getText().isEmpty() && fieldtitle.getText().isEmpty() && fieldalb.getText().isEmpty() && fieldmin.getText().isEmpty() && fieldsec.getText().isEmpty() &&
+				fieldstyle.getSelectedIndex()==-1 && fieldannee.getSelectedIndex()==-1 && fieldtheme.getSelectedIndex()==-1){
+					JOptionPane.showMessageDialog(recherche_song, "Vous devez remplir au moins un champ pour lancer une recherche.", "Recherche impossible", JOptionPane.ERROR_MESSAGE);
+				}else{
+					chansons.removeAll();
+					nb_recherche++;
+					Style style_rech = null;
+					
+					if(fieldstyle.getSelectedItem()!=null){
+						for(Genre g : styles1){
+							if(fieldstyle.getSelectedItem().equals(g.get_nomG())) style_rech = new Genre(g.get_nomG(), g.getId());
+							for(Style s : g.fils){
+								if(fieldstyle.getSelectedItem().equals(s.get_nomS())) style_rech = new Style(s.get_nomS(), s.getId(), s.getPere());
+								for(Style ss : s.fils ){
+									if(fieldstyle.getSelectedItem().equals(ss.get_nomS())) style_rech = new Style(ss.get_nomS(), ss.getId(), ss.getPere());
+								}
 							}
 						}
 					}
-				}
-				
-				int an;
-				if(fieldannee.getSelectedItem()!=null){
-					an = (int)fieldannee.getSelectedItem();
 					
-				}
-				else an = 0;
-				Time ti;
-				if(fieldmin.getText().isEmpty()&&fieldsec.getText().isEmpty()) ti = new Time(1000000000);
-				else if(!fieldmin.getText().isEmpty()&&fieldsec.getText().isEmpty()) ti = new Time(((Integer.parseInt(fieldmin.getText()))*60)*1000);
-				else if(fieldmin.getText().isEmpty()&&!fieldsec.getText().isEmpty()) ti = new Time((Integer.parseInt(fieldmin.getText()))*1000);
-				else ti = new Time(((Integer.parseInt(fieldmin.getText())*60)+Integer.parseInt(fieldmin.getText()))*1000);
-				
-				System.out.println(fieldart.getText());
-				System.out.println(fieldtitle.getText());
-				System.out.println(fieldalb.getText());
-				System.out.println(an);
-				Profil p = new Profil(nb_recherche, an, fieldtitle.getText(), style_rech, null, null, (String)fieldtheme.getSelectedItem(), ti, 0, null, null, fieldalb.getText(), fieldart.getText());
-				Chanson res = new Chanson();
-				result_songs = res.recherche(p, init.recuperer_chansons(styles1));
-				if(result_songs!=null){
-					for(int j=0; j<result_songs.size(); j++){
-						chansons.add(new PanelChanson(result_songs.get(j).getTitre() + " -  " + result_songs.get(j).getArtiste()));
+					int an;
+					if(fieldannee.getSelectedItem()!=null){
+						an = (int)fieldannee.getSelectedItem();
+						
 					}
+					else an = 0;
+					Time ti;
+					if(fieldmin.getText().isEmpty()&&fieldsec.getText().isEmpty()) ti = new Time(1000000000);
+					else if(!fieldmin.getText().isEmpty()&&fieldsec.getText().isEmpty()) ti = new Time(((Integer.parseInt(fieldmin.getText()))*60)*1000);
+					else if(fieldmin.getText().isEmpty()&&!fieldsec.getText().isEmpty()) ti = new Time((Integer.parseInt(fieldmin.getText()))*1000);
+					else ti = new Time(((Integer.parseInt(fieldmin.getText())*60)+Integer.parseInt(fieldmin.getText()))*1000);
+					
+					Profil p = new Profil(nb_recherche, an, fieldtitle.getText(), style_rech, null, null, (String)fieldtheme.getSelectedItem(), ti, 0, null, null, fieldalb.getText(), fieldart.getText());
+					Chanson res = new Chanson();
+					result_songs = res.recherche(p, init.recuperer_chansons(styles1));
+					if(result_songs!=null){
+						for(int j=0; j<result_songs.size(); j++){
+							chansons.add(new PanelResRech(result_songs.get(j), p));
+						}
+					}
+					pBContent.setVisible(false);
+					resultat.setVisible(true);
 				}
-				pBContent.setVisible(false);
-				resultat.setVisible(true);
 			}
 		});
 		

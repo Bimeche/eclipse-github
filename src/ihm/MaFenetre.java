@@ -11,16 +11,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class MaFenetre extends JFrame{
 	static boolean log = false;
-	private JTabbedPane Onglets = null;
+	static JTabbedPane Onglets = null;
 	private JPanel container;
 	static PanelAcc jp1 = new PanelAcc();
     private PanelRech jp2 = new PanelRech();
     private PanelComp jp3 = new PanelComp();
-    private PanelPlay jp4 = new PanelPlay();
-    private PanelData jp5 = new PanelData();
+    static PanelPlay jp4;
+    static PanelData jp5 = new PanelData();
 	
 	public MaFenetre(int x, int y, int l, int h){
 		try {
@@ -40,20 +44,16 @@ public class MaFenetre extends JFrame{
         container.setLayout(new BorderLayout());
         
         /* LES ONGLETS */
-		 Onglets = new JTabbedPane();
-		 Onglets.addTab("Accueil", null, jp1);
-		 Onglets.addTab("Recherche", null , jp2);
-		 Onglets.addTab("Comparaison", null ,jp3);
-		 Onglets.addTab("Playlist", null, jp4);
-		 Onglets.addTab("Données", null, jp5);
-		 //Onglets.setEnabledAt(4, false);
+        Onglets = new JTabbedPane();
+		Onglets.addTab("Accueil", null, jp1);
+		Onglets.addTab("Recherche", null , jp2);
+		Onglets.addTab("Comparaison", null ,jp3);
+		//Onglets.addTab("Playlist", null, jp4);
+		//Onglets.addTab("Données", null, jp5);
 		
 		 
-	     container.add(Onglets, null);
-	     this.setContentPane(container);
-	     this.setVisible(true);
-		
+	    container.add(Onglets, null);
+	    this.setContentPane(container);
+	    this.setVisible(true);	
 	}
-	
-
 }

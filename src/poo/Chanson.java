@@ -371,7 +371,6 @@ public class Chanson extends Profil implements Comparable<Profil>, Searchable<Ch
 				
 		// recherche selon la duree
 		for(Chanson c : arr){
-			System.out.println("duree non vide");
 			tmp.add(new Rech_song(c, (int)(100*c.comparer_duree(p))));
 		}
 		

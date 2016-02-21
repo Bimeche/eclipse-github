@@ -26,6 +26,7 @@ import reserv.Client;
 
 public class FenetreConnexion extends JFrame{
 	private boolean success = false;
+	
 	public FenetreConnexion(){
 		try {
  		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -119,6 +120,8 @@ public class FenetreConnexion extends JFrame{
 	    				PanelAcc.pBienvenuelog = new PanelAcc_Bienvenuelog();
 	    				MaFenetre.jp1.add(PanelAcc.pBienvenuelog);
 	    				PanelAcc.pBienvenuelog.setVisible(true);
+	    				MaFenetre.jp4 = new PanelPlay();
+	    				MaFenetre.Onglets.addTab("Playlist", null, MaFenetre.jp4);
 	                }
                 }else{
                 	JOptionPane.showMessageDialog(pco, "Le pseudo ou le mot de passe est incorrect", "Erreur lors de la connexion", JOptionPane.ERROR_MESSAGE);

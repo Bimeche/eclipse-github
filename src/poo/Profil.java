@@ -35,6 +35,22 @@ public class Profil{
 		artiste = art;
 	}
 	
+	public Profil(Chanson c){
+		id = c.getId();
+		annee = c.getAnnee();
+		titre = c.getTitre();
+		style1 = c.getSt1();
+		style2 = c.getSt2();
+		style3 = c.getSt3();
+		theme = c.getTheme();
+		duree = c.getDuree();
+		rythme = c.getRythme();
+		paroles = c.getParoles();
+		instrument = c.getinstru();
+		album = c.getAlbum();
+		artiste = c.getArtiste();
+	}
+	
 	public int getAnnee(){return annee;}
 
 	public String getTitre(){return titre;}

@@ -314,80 +314,6 @@ public class init {
 			return liste;
 	}
 	
-	public static ArrayList<Style> recuperer_styles(){
-		ArrayList<Style> liste = new ArrayList<Style>();
-		//Information d'accès à la base de données
-		String url = "jdbc:mysql://localhost/Projet_Poo";
-		String login = "root";
-		String passwd = "projet";
-		Connection cn = null;
-		Statement st = null;
-		ResultSet rs = null;
-		
-		// ON RECUPERE LES STYLES
-		try{Class.forName("com.mysql.jdbc.Driver");
-			cn = (Connection) DriverManager.getConnection(url, login, passwd);
-			st = (Statement) cn.createStatement();
-			String sql = "SELECT * FROM Style";
-			rs = st.executeQuery(sql);
-			while(rs.next()){
-				/*
-				 * Récupère les sous-styles des Genres et les place dans les arrayList de chaque Genre
-				 * En fonction de l'idPere contenu dans la BDD dans la Table des Styles
-				 */
-				liste.add(new Style(rs.getString("nomS"), rs.getInt("idS")));
-			}
-		}catch(SQLException e){
-			e.printStackTrace();
-		}catch(ClassNotFoundException e){
-			e.printStackTrace();
-		}finally {
-			try{cn.close();	st.close();
-			}catch(SQLException e){
-				e.printStackTrace();
-			}
-		}
-		return liste;
-	
-	}
-	
-	public static ArrayList<Style> recuperer_sousstyles(){
-		ArrayList<Style> liste = new ArrayList<Style>();
-		//Information d'accès à la base de données
-		String url = "jdbc:mysql://localhost/Projet_Poo";
-		String login = "root";
-		String passwd = "projet";
-		Connection cn = null;
-		Statement st = null;
-		ResultSet rs = null;
-	
-		//ON RECUPERE LES SOUS_STYLES 
-		// ON RECUPERE LES STYLES
-		try{Class.forName("com.mysql.jdbc.Driver");
-			cn = (Connection) DriverManager.getConnection(url, login, passwd);
-			st = (Statement) cn.createStatement();
-			String sql = "SELECT * FROM Sous_Style";
-			rs = st.executeQuery(sql);
-			while(rs.next()){
-				/*
-				 * Récupère les sous-styles des Genres et les place dans les arrayList de chaque Genre
-				 * En fonction de l'idPere contenu dans la BDD dans la Table des Styles
-				 */
-				liste.add(new Style(rs.getString("nomSSS"), rs.getInt("idSSS")));
-			}
-		}catch(SQLException e){
-			e.printStackTrace();
-		}catch(ClassNotFoundException e){
-			e.printStackTrace();
-		}finally {
-			try{cn.close();	st.close();
-			}catch(SQLException e){
-				e.printStackTrace();
-			}
-		}
-		return liste;
-	}
-	
 	/**
 	 * Fonction qui permet de récupérer les artistes de la BDD et de créer une ArrayList contenant les artistes définis dans la BDD.
 	 * @return La liste des artistes
@@ -616,6 +542,62 @@ public static ArrayList<Chanson> recuperer_chansons(ArrayList<Genre> liste_g){
 	
 		return liste;
 	}
-
+	
+	public static ArrayList<Chanson> recuperer_playlist(Client c){
+		int i = 0;
+		ArrayList<Chanson> result = new ArrayList<Chanson>();
+		ArrayList<Chanson> liste = init.recuperer_chansons(recuperer_arbre());
+		int[][] tab_pl = new int[liste.size()][2];
+		//Information d'accès à la base de données
+		String url = "jdbc:mysql://localhost/Projet_Poo";
+		String login = "root";
+		String passwd = "projet";
+		Connection cn = null;
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+			//Etape 1 : Chargement du driver
+			Class.forName("com.mysql.jdbc.Driver");
+			//Etape 2 : récupération de la connexion
+			cn = (Connection) DriverManager.getConnection(url, login, passwd);
+			//Etape 3 : Création d'un statement
+			st = (Statement) cn.createStatement();
+			String sql = "SELECT * FROM playlist";
+			//Etape 4 : exécution requête
+			rs = st.executeQuery(sql);
+			//Etape 5 : (Parcours Resultset)
+			while(rs.next()){
+				tab_pl[i][0] = rs.getInt("id_client");
+				tab_pl[i][1] = rs.getInt("id_chanson");
+				i++;
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}finally {
+			try{
+				// Etape 5 : libérer les ressources de la mémoire
+				cn.close();
+				st.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+		for(int j = 0; j<i; j++){
+			if(tab_pl[j][0] == c.getId()){
+				for(Chanson ch : liste){
+					if(tab_pl[j][1] == ch.getId()){
+						result.add(ch);
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
 }
+
+
 

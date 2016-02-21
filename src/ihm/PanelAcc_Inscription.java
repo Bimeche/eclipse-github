@@ -57,49 +57,47 @@ public class PanelAcc_Inscription extends JPanel{
 		titleins = BorderFactory.createTitledBorder(loweredetched,"Formulaire d'inscription");
 		panelins.setBorder(titleins);
 		
-			/* Champ de nom*/
-			JTextField fieldnom = new JTextField(15); 
-				JLabel nom = new JLabel("Nom ");
-				
-			/* Champ de prénom*/
-			JTextField fieldprenom = new JTextField(15);
-				JLabel prenom = new JLabel("Pr�nom* ");
+		/* Champ de nom*/
+		JTextField fieldnom = new JTextField(15); 
+		JLabel nom = new JLabel("Nom ");
 			
-			/*Champ de Mail */
-			JTextField fieldpseudo = new JTextField(15); 
-				JLabel pseudo = new JLabel("Pseudo* ");
+		/* Champ de prénom*/
+		JTextField fieldprenom = new JTextField(15);
+		JLabel prenom = new JLabel("Pr�nom* ");
+		
+		/*Champ de Mail */
+		JTextField fieldpseudo = new JTextField(15); 
+		JLabel pseudo = new JLabel("Pseudo* ");
 
-			/*Champ de MDP*/
-			JPasswordField fieldmdp = new JPasswordField(15); 
-				JLabel passwd = new JLabel("Mot de Passe* ");
-
-			/* On place les éléments correctement grâce au GridBagLayout */
-			panelins.add(nom,gc);
-			gc.gridwidth = GridBagConstraints.REMAINDER;
-			gc.fill = GridBagConstraints.HORIZONTAL;
-		    panelins.add(fieldnom, gc);
-		    gc.gridwidth = 1;
-		    gc.gridy++;
-		    panelins.add(prenom, gc);
-		    panelins.add(fieldprenom, gc);
-		    gc.gridy++;
-		    panelins.add(pseudo, gc);
-		    panelins.add(fieldpseudo, gc);
-		    gc.gridy++;
-		    panelins.add(passwd, gc);
-		    panelins.add(fieldmdp, gc);				
-
-		    JPanel glue = new JPanel();
-		    gc.gridy++; panelins.add(glue,gc);
-		    gc.gridy++; panelins.add(glue,gc);
+		/*Champ de MDP*/
+		JPasswordField fieldmdp = new JPasswordField(15); 
+		JLabel passwd = new JLabel("Mot de Passe* ");
+		/* On place les éléments correctement grâce au GridBagLayout */
+		panelins.add(nom,gc);
+		gc.gridwidth = GridBagConstraints.REMAINDER;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		panelins.add(fieldnom, gc);
+		gc.gridwidth = 1;
+		gc.gridy++;
+		panelins.add(prenom, gc);
+		panelins.add(fieldprenom, gc);
+		gc.gridy++;
+		panelins.add(pseudo, gc);
+		panelins.add(fieldpseudo, gc);
+		gc.gridy++;
+		panelins.add(passwd, gc);
+		panelins.add(fieldmdp, gc);				
+		JPanel glue = new JPanel();
+		gc.gridy++; panelins.add(glue,gc);
+		gc.gridy++; panelins.add(glue,gc);
 		/* Les boutons de l'inscription */
-		    JButton retour_ins = new JButton("Retour");
-			JButton valider_ins_butt = new JButton("Valider");
+		JButton retour_ins = new JButton("Retour");
+		JButton valider_ins_butt = new JButton("Valider");
 			
-			gc.anchor = GridBagConstraints.PAGE_END;
-			gc.gridy++;
-			panelins.add(retour_ins, gc);
-			panelins.add(valider_ins_butt, gc);
+		gc.anchor = GridBagConstraints.PAGE_END;
+		gc.gridy++;
+		panelins.add(retour_ins, gc);
+		panelins.add(valider_ins_butt, gc);
 		this.add(BorderLayout.NORTH, panelins);
 		/* On ajoute des listeners sur les boutons */
 		retour_ins.addActionListener(new ActionListener(){
@@ -142,6 +140,8 @@ public class PanelAcc_Inscription extends JPanel{
 						cn = (Connection) DriverManager.getConnection(url, login, passwd);
 						//Etape 3 : Création d'un statement
 						st = (Statement) cn.createStatement();
+//						String s = new String();
+//						s.add(fieldmdp.getPassword())
 						String sql = "INSERT INTO Client " + "VALUES ('"+i+"', '"+fieldnom.getText()+"', '"+fieldprenom.getText()+"', '"+fieldpseudo.getText()+"', '"+new String(fieldmdp.getPassword())+"')";
 						//Etape 4 : exécution requête
 						st.executeUpdate(sql);
@@ -162,7 +162,7 @@ public class PanelAcc_Inscription extends JPanel{
 					String options[] = {"OK"};
 					int n = JOptionPane.showOptionDialog(panelins, "Merci pour votre inscription", "Incription r�ussie", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 					if(n==0 || n==JOptionPane.CLOSED_OPTION ){
-						System.out.println(fieldpseudo.getText());
+						MaFenetre.log=true;
 						PanelAcc.login = fieldpseudo.getText();
 						fieldnom.setText("");
 						fieldprenom.setText("");
@@ -173,6 +173,10 @@ public class PanelAcc_Inscription extends JPanel{
 						PanelAcc.pBienvenuelog = new PanelAcc_Bienvenuelog();
 						MaFenetre.jp1.add(PanelAcc.pBienvenuelog);
 						PanelAcc.pBienvenuelog.setVisible(true);
+						MaFenetre.jp4 = new PanelPlay();
+						MaFenetre.Onglets.addTab("Playlist", null, MaFenetre.jp4);
+	    				MaFenetre.Onglets.setEnabledAt(3, true);
+
 					}
 					
 				}else{

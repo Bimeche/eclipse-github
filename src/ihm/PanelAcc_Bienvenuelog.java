@@ -40,8 +40,10 @@ public class PanelAcc_Bienvenuelog extends JPanel {
 		bDeconnexion.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
+				MaFenetre.log=false;
 				PanelAcc.pBienvenuelog.setVisible(false);
 				PanelAcc.pBienvenue.setVisible(true);
+				MaFenetre.Onglets.remove(3);
 			}
 		});
 
