@@ -3,8 +3,8 @@ package poo;
 import java.util.ArrayList;
 
 
-public class Genre extends Style implements Comparable<Genre> {
-	public int dist_genres[]; // DÃ©termine la distance entre les genres
+public class Genre extends Style {
+	public int dist_genres[]; // Détermine la distance entre les genres
 	public Genre pere;
 	public ArrayList<Style> fils;
 	public String nom;
@@ -25,7 +25,7 @@ public class Genre extends Style implements Comparable<Genre> {
 	
 
 	/**
-	 * Constructeur de Genre nÂ°2
+	 * Constructeur de Genre n°2
 	 * @param n Nom du Genre
 	 * @param i indice du Genre
 	 */
@@ -39,7 +39,7 @@ public class Genre extends Style implements Comparable<Genre> {
 	}
 	
 	/**
-	 * DÃ©finit la distance entre deux Genres 
+	 * Définit la distance entre deux Genres 
 	 * @param s le Genre
 	 * @param distance La distance entre les Genres
 	 */
@@ -48,8 +48,8 @@ public class Genre extends Style implements Comparable<Genre> {
 	}
 	
 	/**
-	 * Ajoute un sous_style Ã  l'ArrayListe du Genre contenant ses fils
-	 * @param s le sous_style Ã  ajouter
+	 * Ajoute un sous_style à l'ArrayListe du Genre contenant ses fils
+	 * @param s le sous_style à ajouter
 	 */
 	public void add_sstyle(Style s){
 		fils.add(s);
@@ -81,7 +81,7 @@ public class Genre extends Style implements Comparable<Genre> {
 		System.out.print("\n");
 	}
 	/**
-	 * Fonction qui dÃ©termine si s est un fils direct du genre
+	 * Fonction qui détermine si s est un fils direct du genre
 	 * @param s
 	 * @return
 	 */
@@ -117,7 +117,7 @@ public class Genre extends Style implements Comparable<Genre> {
 		if(this == s)r = 0;
 		return r;
 	}
-	
+	/*
 	public float comparerG(Genre s){
 		if(this==null || s ==null)	return (float) 0;
 		if(this == s)	return (float)1;
@@ -138,7 +138,7 @@ public class Genre extends Style implements Comparable<Genre> {
 			//Test si le sous_style est un petit-fils du genre
 		else if(test != -1)	result = (float) s.idSS + test;
 		
-		else{// On rÃ©cupÃ¨re le Genre du Sous_style et on ajoute la distance au genre
+		else{// On récupère le Genre du Sous_style et on ajoute la distance au genre
 			result = s.idSS;
 			if(s.pere.est_genre())	result += distG(s.pere);
 			else{
@@ -150,4 +150,5 @@ public class Genre extends Style implements Comparable<Genre> {
 		if(result <0)	result = 0;
 		return result;
 	}
+	*/
 }

@@ -3,11 +3,11 @@ package poo;
 import java.util.ArrayList;
 
 /**
- * Classe qui sera implémentée par les programmeurs
+ * Classe qui sera impl�ment�e par les programmeurs
  * @author oceane
  *
  */
-public class Style implements Comparable<Genre>{
+public class Style implements Comparable<Style>{
 	public int idSS;
 	public Style pere;
 	public String nom;
@@ -30,7 +30,7 @@ public class Style implements Comparable<Genre>{
 	/**
 	 * Constructeur de sous_style
 	 * @param n le nom du style
-	 * @param i le numéro du fils (et son rapport d proximité par rapport au Style père)
+	 * @param i le num�ro du fils (et son rapport d proximit� par rapport au Style p�re)
 	 */
 	public Style(String n, int id, Style p){
 		
@@ -67,7 +67,7 @@ public class Style implements Comparable<Genre>{
 		return (pere == null);
 	}
 	/**
-	 * Fonction qui détermine si s est un fils direct du genre
+	 * Fonction qui d�termine si s est un fils direct du genre
 	 * @param s
 	 * @return
 	 */
@@ -84,7 +84,7 @@ public class Style implements Comparable<Genre>{
 		}
 	/**
 	 * Renvoie -1 si le Genre n'a pas le style comme petit-fils
-	 * Renvoie l'id du père sinon
+	 * Renvoie l'id du p�re sinon
 	 */
 	public int a_pour_petit_fils(Style s){
 		int res = -1;
@@ -99,77 +99,64 @@ public class Style implements Comparable<Genre>{
 		return res;
 		
 	}
+	
+	public boolean est_dans_arbre(Style s){
+		boolean b = false;
+		if(this.est_genre()){
+			if((this.nom.equals(s.nom)) || (a_pour_fils(s)!=-1) || (a_pour_petit_fils(s)!=-1))	b = true;
+		}
+		else return pere.est_dans_arbre(s);
+		return b;
+	}
 	public float distG(Style s){
 		return ((Genre)this).dist_genres[s.idSS];
 	}
-	
-	/*
-	 * Fonction de comparaison : Sous-style avec un Genre
-	 */
-	public float comparer(Genre s){
-		float resultat=0;
-		if(this == s)	resultat =0; 
-		else if(this.est_genre())	resultat= ((Genre)this).dist_genres[s.idSS];
-			//Cas 1 : Le père est un genre
-		else if (this.pere.est_genre()){
-			//Cas 1-1 : Le père est le genre recherché
-			if (pere == s) resultat += idSS; 
-			//Cas 1-2 : Le père n'est pas le genre recherché 
-			else resultat += idSS + (pere).distG(s);
-		}
-		//Cas 2 : Le père n'est pas un genre
+	public float distance_au_pere(){
+		if(this.est_genre())	return 0;
+		else if(this.pere.est_genre()) return 1;
+		else return 2;
+	}
+	public Genre recuperer_genre(){
+		if(est_genre()) return (Genre)this;
+		else return pere.recuperer_genre();
+	}
+	public float distance_style(Style s){
+		float resultat = 0;
+		//V�rification si ce sont les m�mes styles
+		if(this.nom.equals(s.nom))	resultat=0;
+		
+		//On regarde si les deux styles sont des genres 
+		else if(this.est_genre() && s.est_genre())	resultat = (float)this.distG((Genre)s);
 		else{
-			//Cas 2-2 : Le grand-père est le genre recherché
-			if (this.pere.pere.est_genre() && this.pere.pere == s)	resultat += idSS + pere.idSS;
-			//Cas 2-3 : Le grand-père n'est pas le genre recherché 
-			else{
-				resultat += idSS;
-					if (pere.pere == s) resultat += idSS; 
-					else resultat += idSS + (pere.pere).distG(s);
+		// Si il est dans l'arbre : 
+			if(this.est_dans_arbre(s)){
+				if(this.est_genre()){
+					if(this.a_pour_fils(s)!=-1) resultat += s.idSS;
+					if(this.a_pour_petit_fils(s)!=-1) resultat += s.pere.idSS + s.idSS;
+					}
+				else if(pere.est_genre()) {
+					if(this.a_pour_fils(s)!=-1)	resultat += s.idSS;
+					else resultat += this.idSS + pere.distance_style(s);
 				}
+				else resultat += this.idSS + pere.distance_style(s);
+			}
+		//Si il n'est pas dans l'arbre :
+			else{	
+				resultat += this.distance_au_pere();
+				resultat += this.recuperer_genre().distG(s.recuperer_genre());
+				resultat += s.recuperer_genre().distance_style(s);	
+			}
 		}
-		
-
-		resultat = (float)(1-resultat/20);
-		if(resultat <0)	resultat = 0;
-		
 		return resultat;
 	}
-
 	public float comparer(Style s){
-		float res = 0;
+		float r = this.distance_style(s);
+		r = 1-r/20;
+		if(r<=0)	r = 0;
+		return r;
 		
-		if(this==null || s == null || this.nom.equals("null") || s.nom.equals("null"))	res = 10000;
-		else if(this == s )	res = 0;
-		
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		else if(this.est_genre()) return ((Genre)this).comparer(s);
-		if(s.est_genre())	return this.comparer((Genre)s);
-		else if(a_pour_fils(s)!=-1)	res = s.idSS;
-		else if(s.a_pour_fils(this)!=-1)	res = this.idSS;
-		//S'ils ont le même père :
-		else if(this.pere == s.pere)	res = this.idSS + s.idSS;
-		//Cas les deux sont au niveau 3 : ils n'ont pas le même père
-		else if((!this.pere.est_genre()) && !s.pere.est_genre()){
-			res += this.idSS + s.idSS + this.pere.idSS + s.pere.idSS + pere.pere.distG(s.pere.pere);
-		}
-		else if((!this.pere.est_genre())&& s.pere.est_genre())	res += this.idSS + s.idSS + this.pere.idSS + pere.pere.distG(s.pere);
-		else if((this.pere.est_genre())&&!s.pere.est_genre())	res += this.idSS + s.idSS + s.pere.idSS + pere.distG(s.pere.pere);
-		//Cas les deux sont au niveau 2 : ils n'ont pas le même père
-		else if((this.pere.est_genre())&&s.pere.est_genre()){
-			res += this.idSS + s.idSS + ((Genre)pere).distG((Genre)s.pere);
-		}
-		
-		res = 1-res/20;
-		if(res<=0)	res = 0;
-		return res;
 	}
 	
-	public void parcours(){
-		
-	}
+
 	
 }

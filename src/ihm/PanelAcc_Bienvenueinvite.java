@@ -4,9 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -27,7 +33,16 @@ public class PanelAcc_Bienvenueinvite extends JPanel{
 		title = BorderFactory.createTitledBorder(loweredetched,"Bienvenue");
 		
 		pBContent.setBorder(title);
-
+		BufferedImage bi;
+		try {
+			bi = ImageIO.read(new File("musique3.jpg"));
+			ImageIcon im = new ImageIcon(bi);
+			pBContent.add(new JLabel(im));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 
 		/* Boutons du panel Bienvenue */
 		JPanel pBButton = new JPanel();
